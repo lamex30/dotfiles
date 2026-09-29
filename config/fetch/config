@@ -1,0 +1,25 @@
+# fetch: logo only - every info field is commented out.
+# Uncomment a line to bring a field back.
+# os
+# host
+# kernel
+# uptime
+# packages
+# shell
+# display
+# wm
+# displaymanager
+# theme
+# icons
+# font
+# cursor
+# terminal
+# cpu
+# gpu
+# memory
+# swap
+# disk
+# ip
+# battery
+# locale
+# colors

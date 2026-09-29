@@ -1,0 +1,22 @@
+[terminal.shell]
+program = "zsh"
+
+[window]
+dimensions = { columns = 95, lines = 26 }
+padding = { x = 2, y = 0 }
+# opacity = 1
+# blur = true
+
+[font]
+size = 10.0
+
+[font.normal]
+family = "JetBrainsMono Nerd Font"
+
+[cursor]
+style = { shape = "Beam" }
+
+[general]
+import = [
+   "~/.config/alacritty/wallpaper.toml"   # generated from the wallpaper by theme.py
+]

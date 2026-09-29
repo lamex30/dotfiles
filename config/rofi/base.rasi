@@ -1,0 +1,22 @@
+/* shared rofi base: overrides rofi's built-in light defaults everywhere */
+@import "colors.rasi"
+* {
+  background: @bg; foreground: @fg;
+  normal-background: transparent; normal-foreground: @fg;
+  alternate-normal-background: transparent; alternate-normal-foreground: @fg;
+  active-background: transparent; active-foreground: @accent;
+  alternate-active-background: transparent; alternate-active-foreground: @accent;
+  urgent-background: transparent; urgent-foreground: @urgent;
+  alternate-urgent-background: transparent; alternate-urgent-foreground: @urgent;
+  selected-normal-background: @accent; selected-normal-foreground: @bg;
+  selected-active-background: @accent; selected-active-foreground: @bg;
+  selected-urgent-background: @urgent; selected-urgent-foreground: @bg;
+  border-color: @accent; separatorcolor: @inactive;
+  background-color: transparent; text-color: @fg;
+}
+element normal.normal, element alternate.normal, element normal.active, element alternate.active,
+element normal.urgent, element alternate.urgent { background-color: transparent; text-color: @fg; }
+entry { text-color: @fg; placeholder-color: @dim; cursor: text; }
+prompt { text-color: @accent; }
+textbox, case-indicator, num-filtered-rows, num-rows { text-color: @fg; }
+listview { border: 0; scrollbar: false; }

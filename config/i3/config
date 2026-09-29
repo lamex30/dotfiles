@@ -1,0 +1,192 @@
+# ─────────────── base ───────────────
+set $mod Mod4
+font pango:JetBrainsMono Nerd Font 10
+floating_modifier $mod
+tiling_drag modifier titlebar
+workspace_auto_back_and_forth yes
+focus_on_window_activation focus
+
+default_border pixel 2
+default_floating_border pixel 2
+hide_edge_borders none
+gaps inner 10
+gaps outer 6
+
+include ~/.config/i3/colors.conf
+
+for_window [window_role="pop-up"] floating enable
+for_window [window_type="dialog"] floating enable
+for_window [class="Arandr"] floating enable
+for_window [class="(?i)pavucontrol"] floating enable, resize set 460 520, move position mouse, sticky enable
+for_window [class="power-popup"] floating enable, border none, move position mouse, sticky enable
+for_window [class="notif-popup"] floating enable, border none, move position mouse, sticky enable
+for_window [class="bt-popup"] floating enable, border none, move position mouse, sticky enable
+for_window [class="volume-popup"] floating enable, border none, move position mouse, sticky enable
+for_window [class="wallpicker"] floating enable, border none, move position center
+
+# ─────────────── autostart ───────────────
+exec_always --no-startup-id setxkbmap -layout us,ru -option '' -option grp:caps_toggle
+exec --no-startup-id picom -b
+exec_always --no-startup-id ~/.config/i3/scripts/restart.sh dunst
+exec_always --no-startup-id ~/.config/i3/scripts/restart.sh nm-applet
+exec --no-startup-id lxpolkit
+exec --no-startup-id ~/.config/i3/scripts/copyq-setup.sh
+exec_always --no-startup-id ~/.config/i3/scripts/restart.sh xss-lock xss-lock --transfer-sleep-lock -- ~/.config/i3/scripts/lock.sh
+exec_always --no-startup-id ~/.config/i3/scripts/wallpaper.sh
+exec_always --no-startup-id ~/.config/polybar/launch.sh
+exec_always --no-startup-id ~/.config/i3/scripts/bar-sidebuttons.sh
+exec_always --no-startup-id ~/.config/i3/scripts/clock-hover.sh
+exec_always --no-startup-id ~/.config/i3/scripts/mouse.sh
+exec_always --no-startup-id ~/.config/i3/scripts/osd.sh
+exec_always --no-startup-id ~/.config/i3/scripts/cursor.sh
+exec_always --no-startup-id ~/.config/i3/scripts/zoom.sh start
+exec_always --no-startup-id ~/.config/i3/scripts/autotiling.sh
+exec_always --no-startup-id ~/.config/i3/scripts/idle.sh
+exec --no-startup-id ~/.config/i3/scripts/dark.sh
+
+# ─────────────── autostart apps ───────────────
+# small delay so the tray exists before tray apps start
+exec --no-startup-id ~/.config/i3/scripts/autostart-apps.sh
+
+# ─────────────── apps ───────────────
+bindsym $mod+Return exec alacritty
+bindsym Ctrl+Mod1+t exec alacritty
+bindsym $mod+e exec dolphin
+bindsym $mod+Mod1+e exec alacritty -e yazi
+bindsym Ctrl+Shift+Escape exec alacritty -e btop
+bindsym $mod+p exec arandr
+bindsym $mod+w exec --no-startup-id ~/.config/i3/scripts/wallpicker.sh
+
+bindsym $mod+space exec --no-startup-id rofi -show drun
+bindsym Mod1+F2 exec --no-startup-id rofi -show run
+bindsym $mod+Tab exec --no-startup-id rofi -show window
+bindsym Mod1+Tab exec --no-startup-id rofi -show window
+bindsym $mod+v exec --no-startup-id ~/.config/i3/scripts/clip.sh
+
+# screen off / lock + screen off
+bindsym --release $mod+Escape exec --no-startup-id ~/.config/i3/scripts/screen-off.sh
+bindsym --release $mod+l exec --no-startup-id ~/.config/i3/scripts/lock-off.sh
+
+# screenshots -> ~/Pictures/Screenshots/ps_DATE.png + clipboard
+bindsym $mod+Shift+s exec --no-startup-id ~/.config/i3/scripts/screenshot.sh region
+bindsym Print exec --no-startup-id ~/.config/i3/scripts/screenshot.sh region
+bindsym $mod+Ctrl+s exec --no-startup-id ~/.config/i3/scripts/screenshot.sh full
+bindsym Shift+Print exec --no-startup-id ~/.config/i3/scripts/screenshot.sh full
+bindsym $mod+Print exec --no-startup-id ~/.config/i3/scripts/screenshot.sh window
+# full screenshot in 3s (for open menus/popups, they block all hotkeys in X11)
+bindsym $mod+Mod1+s exec --no-startup-id ~/.config/i3/scripts/screenshot.sh delay
+
+bindsym Mod1+F10 exec --no-startup-id obs-cmd replay save
+
+# ─────────────── windows ───────────────
+bindsym $mod+q kill
+bindsym $mod+Ctrl+Escape exec --no-startup-id xkill
+
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+bindsym $mod+Ctrl+h resize shrink width 30 px or 3 ppt
+bindsym $mod+Ctrl+l resize grow width 30 px or 3 ppt
+bindsym $mod+Ctrl+k resize shrink height 30 px or 3 ppt
+bindsym $mod+Ctrl+j resize grow height 30 px or 3 ppt
+
+bindsym $mod+f floating toggle
+bindsym $mod+Shift+space focus mode_toggle
+bindsym F11 fullscreen toggle
+bindsym $mod+Ctrl+F6 move position center
+
+# layouts
+bindsym $mod+t layout default
+bindsym $mod+m layout tabbed
+bindsym $mod+r layout toggle split
+bindsym $mod+Shift+r split toggle
+
+# "minimize" / "restore"
+bindsym $mod+minus move scratchpad
+bindsym $mod+BackSpace scratchpad show
+
+# Meta + right-drag: resize by edge (3x3 zones, like KDE)
+bindsym --whole-window $mod+button3 exec --no-startup-id python3 ~/.config/i3/scripts/resize-drag.py
+
+# magnifier: Meta+Ctrl+scroll (windows don't get this scroll), Meta+Ctrl+0 reset
+bindsym --whole-window $mod+Ctrl+button4 exec --no-startup-id ~/.config/i3/scripts/zoom.sh in
+bindsym --whole-window $mod+Ctrl+button5 exec --no-startup-id ~/.config/i3/scripts/zoom.sh out
+bindsym $mod+Ctrl+0 exec --no-startup-id ~/.config/i3/scripts/zoom.sh reset
+
+# ─────────────── workspaces ───────────────
+set $ws1 "1"
+set $ws2 "2"
+set $ws3 "3"
+set $ws4 "4"
+set $ws5 "5"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
+set $ws9 "9"
+set $ws10 "10"
+
+bindsym $mod+1 workspace number $ws1
+bindsym $mod+2 workspace number $ws2
+bindsym $mod+3 workspace number $ws3
+bindsym $mod+4 workspace number $ws4
+bindsym $mod+5 workspace number $ws5
+bindsym $mod+6 workspace number $ws6
+bindsym $mod+7 workspace number $ws7
+bindsym $mod+8 workspace number $ws8
+bindsym $mod+9 workspace number $ws9
+bindsym $mod+0 workspace number $ws10
+
+bindsym $mod+F1 move container to workspace number $ws1
+bindsym $mod+F2 move container to workspace number $ws2
+bindsym $mod+F3 move container to workspace number $ws3
+bindsym $mod+F4 move container to workspace number $ws4
+bindsym $mod+F5 move container to workspace number $ws5
+bindsym $mod+F6 move container to workspace number $ws6
+bindsym $mod+F7 move container to workspace number $ws7
+bindsym $mod+F8 move container to workspace number $ws8
+bindsym $mod+F9 move container to workspace number $ws9
+bindsym $mod+F10 move container to workspace number $ws10
+
+bindsym $mod+Ctrl+Left workspace prev
+bindsym $mod+Ctrl+Right workspace next
+bindsym $mod+Ctrl+Shift+Left move container to workspace prev; workspace prev
+bindsym $mod+Ctrl+Shift+Right move container to workspace next; workspace next
+
+# ─────────────── media keys ───────────────
+bindsym XF86AudioRaiseVolume exec --no-startup-id ~/.config/i3/scripts/media.sh vol-up
+bindsym XF86AudioLowerVolume exec --no-startup-id ~/.config/i3/scripts/media.sh vol-down
+bindsym Shift+XF86AudioRaiseVolume exec --no-startup-id ~/.config/i3/scripts/media.sh vol-up-small
+bindsym Shift+XF86AudioLowerVolume exec --no-startup-id ~/.config/i3/scripts/media.sh vol-down-small
+bindsym XF86AudioMute exec --no-startup-id ~/.config/i3/scripts/media.sh mute
+bindsym XF86AudioMicMute exec --no-startup-id ~/.config/i3/scripts/media.sh mic
+bindsym $mod+XF86AudioMute exec --no-startup-id ~/.config/i3/scripts/media.sh mic
+
+bindsym XF86MonBrightnessUp exec --no-startup-id ~/.config/i3/scripts/media.sh bri-up
+bindsym XF86MonBrightnessDown exec --no-startup-id ~/.config/i3/scripts/media.sh bri-down
+bindsym Shift+XF86MonBrightnessUp exec --no-startup-id ~/.config/i3/scripts/media.sh bri-up-small
+bindsym Shift+XF86MonBrightnessDown exec --no-startup-id ~/.config/i3/scripts/media.sh bri-down-small
+
+bindsym XF86AudioPlay exec --no-startup-id playerctl play-pause
+bindsym XF86AudioPause exec --no-startup-id playerctl pause
+bindsym XF86AudioNext exec --no-startup-id playerctl next
+bindsym XF86AudioPrev exec --no-startup-id playerctl previous
+bindsym XF86AudioStop exec --no-startup-id playerctl stop
+
+# ─────────────── i3 itself ───────────────
+bindsym $mod+Shift+c reload
+bindsym $mod+Ctrl+r restart
+bindsym $mod+Shift+e exec --no-startup-id i3-nagbar -t warning -m 'Exit i3?' -B 'Yes' 'i3-msg exit'

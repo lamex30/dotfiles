@@ -1,0 +1,21 @@
+@import "base.rasi"
+configuration {
+  hover-select: true;
+  me-select-entry: "";
+  me-accept-entry: "MousePrimary";
+  show-icons: true;
+  font: "JetBrainsMono Nerd Font 11";
+  drun-display-format: "{name}";
+}
+* {
+  background-color: transparent;
+  text-color: @fg;
+}
+window { background-color: @bg; border: 2px; border-color: @accent; width: 600px; padding: 12px; }
+inputbar { children: [prompt, entry]; spacing: 8px; padding: 0 0 8px 0; }
+prompt { text-color: @accent; }
+listview { lines: 8; }
+element { padding: 4px 8px; }
+element selected.normal, element selected.active { background-color: @accent; text-color: @bg; }
+element-text, element-icon { text-color: inherit; }
+element-icon { size: 1.2em; }

@@ -1,0 +1,10 @@
+@import "base.rasi"
+configuration { font: "JetBrainsMono Nerd Font 15"; show-icons: false; }
+* { background-color: transparent; text-color: @fg; }
+window { location: center; anchor: center; width: 66%; background-color: @bg; border: 2px; border-color: @accent; padding: 40px; }
+mainbox { children: [listview]; }
+listview { columns: 4; lines: 1; flow: horizontal; spacing: 24px; fixed-columns: true; fixed-height: true; scrollbar: false; }
+element { padding: 40px 0; background-color: @bg-alt; }
+element selected.normal, element selected.active { background-color: @accent; text-color: @bg; }
+element-text { horizontal-align: 0.5; vertical-align: 0.5; text-color: inherit; }
+element normal.normal, element alternate.normal, element normal.active, element alternate.active { background-color: @bg-alt; text-color: @fg; }

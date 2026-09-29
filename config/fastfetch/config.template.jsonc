@@ -1,0 +1,97 @@
+// Template: theme.py renders it into config.jsonc with the wallpaper colors.
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+  "logo": {
+    "type": "file",
+    "source": "~/.config/fastfetch/logo/wired.txt",
+    "position": "top",
+    "color": {
+      "1": "{{ACC_RAW}}",
+      "2": "{{ACC2_RAW}}"
+    },
+    "padding": {
+      "top": 1,
+      "left": 1,
+      "right": 0
+    }
+  },
+  "display": {
+    "separator": "  ",
+    "color": {
+      "keys": "{{FG_RAW}}",
+      "output": "{{FG_RAW}}"
+    }
+  },
+  "modules": [
+    {
+      "type": "title",
+      "key": "\u001b[38;2;{{ACC}}m\u001b[48;2;{{ACC}}m\u001b[38;2;{{BG}}m󰀄 user  \u001b[0m\u001b[38;2;{{ACC}}m\u001b[0m",
+      "format": "{user-name}\u001b[0m\u001b[38;2;{{DIM}}m@{host-name}"
+    },
+    {
+      "type": "os",
+      "key": "\u001b[38;2;{{ACC}}m\u001b[48;2;{{ACC}}m\u001b[38;2;{{BG}}m󰌽 distro\u001b[0m\u001b[38;2;{{ACC}}m\u001b[0m",
+      "format": "{pretty-name}"
+    },
+    {
+      "type": "kernel",
+      "key": "\u001b[38;2;{{ACC}}m\u001b[48;2;{{ACC}}m\u001b[38;2;{{BG}}m󰘚 kernel\u001b[0m\u001b[38;2;{{ACC}}m\u001b[0m",
+      "format": "{release}"
+    },
+    {
+      "type": "wm",
+      "key": "\u001b[38;2;{{ACC}}m\u001b[48;2;{{ACC}}m\u001b[38;2;{{BG}}m󰕮 wm    \u001b[0m\u001b[38;2;{{ACC}}m\u001b[0m",
+      "format": "{pretty-name}"
+    },
+    {
+      "type": "shell",
+      "key": "\u001b[38;2;{{ACC}}m\u001b[48;2;{{ACC}}m\u001b[38;2;{{BG}}m󰆍 shell \u001b[0m\u001b[38;2;{{ACC}}m\u001b[0m",
+      "format": "{pretty-name}"
+    },
+    {
+      "type": "packages",
+      "key": "\u001b[38;2;{{ACC}}m\u001b[48;2;{{ACC}}m\u001b[38;2;{{BG}}m󰏖 pkgs  \u001b[0m\u001b[38;2;{{ACC}}m\u001b[0m",
+      "format": "{all}"
+    },
+    "break",
+    {
+      "type": "cpu",
+      "key": "\u001b[38;2;{{ACC2}}m\u001b[48;2;{{ACC2}}m\u001b[38;2;{{BG}}m󰻠 cpu   \u001b[0m\u001b[38;2;{{ACC2}}m\u001b[0m",
+      "format": "{name}"
+    },
+    {
+      "type": "gpu",
+      "key": "\u001b[38;2;{{ACC2}}m\u001b[48;2;{{ACC2}}m\u001b[38;2;{{BG}}m󰢮 gpu   \u001b[0m\u001b[38;2;{{ACC2}}m\u001b[0m",
+      "hideType": "integrated",
+      "format": "{name}"
+    },
+    {
+      "type": "memory",
+      "key": "\u001b[38;2;{{ACC2}}m\u001b[48;2;{{ACC2}}m\u001b[38;2;{{BG}}m󰍛 memory\u001b[0m\u001b[38;2;{{ACC2}}m\u001b[0m",
+      "format": "{used} | {total}"
+    },
+    {
+      "type": "disk",
+      "key": "\u001b[38;2;{{ACC2}}m\u001b[48;2;{{ACC2}}m\u001b[38;2;{{BG}}m󰋊 root  \u001b[0m\u001b[38;2;{{ACC2}}m\u001b[0m",
+      "folders": "/",
+      "format": "{size-used} / {size-total}"
+    },
+    "break",
+    {
+      "type": "uptime",
+      "key": "\u001b[38;2;{{INACT}}m\u001b[48;2;{{INACT}}m\u001b[38;2;{{FG}}m󰥔 uptime\u001b[0m\u001b[38;2;{{INACT}}m\u001b[0m",
+      "format": "{hours}h {minutes}m"
+    },
+    {
+      "type": "command",
+      "key": "\u001b[38;2;{{INACT}}m\u001b[48;2;{{INACT}}m\u001b[38;2;{{FG}}m󰃭 age   \u001b[0m\u001b[38;2;{{INACT}}m\u001b[0m",
+      "text": "born=$(stat -c %W / 2>/dev/null); if [ -z \"$born\" ] || [ \"$born\" -le 0 ]; then born=$(stat -c %Y / 2>/dev/null); fi; now=$(date +%s); diff=$((now-born)); echo \"$((diff/86400))d $((diff%86400/3600))h\""
+    },
+    "break",
+    {
+      "type": "colors",
+      "paddingLeft": 1,
+      "symbol": "block"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+*.log
+*.bak
+.theme-stamp
+.launch-stamp
+config/i3/lock.png
+config/i3/wallpicker.json

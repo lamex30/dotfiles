@@ -1,0 +1,9 @@
+@import "base.rasi"
+configuration { font: "JetBrainsMono Nerd Font 12"; show-icons: false; }
+* { background-color: transparent; text-color: @fg; }
+window { background-color: @bg; border: 2px; border-color: @accent; width: 380px; padding: 6px; }
+mainbox { children: [listview]; }
+listview { lines: 10; fixed-height: false; scrollbar: false; spacing: 2px; }
+element { padding: 10px 14px; }
+element selected.normal, element selected.active { background-color: @accent; text-color: @bg; }
+element-text { text-color: inherit; }

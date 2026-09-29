@@ -1,0 +1,120 @@
+#!/usr/bin/env python3
+# wired-fetch: fastfetch data, own layout. Header wordmark + three cards side by side
+# (system / hardware / time), icons instead of spec names, colors from the wallpaper.
+import json, os, re, shutil, subprocess, sys, time
+
+def hexrgb(h): h = h.lstrip("#"); return tuple(int(h[i:i+2], 16) for i in (0, 2, 4))
+try: C = json.load(open(os.path.expanduser("~/.config/i3/colors.json")))
+except Exception: C = {"accent": "#db8095", "accent2": "#e0a390", "dim": "#808080", "fg": "#e0e0e0", "inactive": "#333333"}
+fg = lambda h: "\033[38;2;%d;%d;%dm" % hexrgb(h)
+R, B = "\033[0m", "\033[1m"
+A1, A2, DIM, FG, INA = fg(C["accent"]), fg(C["accent2"]), fg(C["dim"]), fg(C["fg"]), fg(C["inactive"])
+vis = lambda s: len(re.sub(r"\033\[[0-9;]*m", "", s))
+pad = lambda s, w: s + " " * max(0, w - vis(s))
+
+# ---------- data ----------
+def fetch():
+    mods = "title:os:kernel:wm:shell:packages:cpu:gpu:memory:disk:uptime"
+    log = os.path.expanduser("~/.config/fastfetch/.wired-fetch.log")
+    attempts = [["-c", "none", "--format", "json", "-s", mods],
+                ["--format", "json", "-s", mods],
+                ["--json", "-s", mods]]
+    ff = shutil.which("fastfetch", path="/usr/local/bin:/usr/bin:/bin") or "fastfetch"
+    with open(log, "w") as lf:
+        for a in attempts:
+            try:
+                p = subprocess.run([ff] + a, capture_output=True, text=True, timeout=15)
+                lf.write(f"$ {ff} {' '.join(a)}\nrc={p.returncode}\nSTDERR:\n{p.stderr[:2000]}\nSTDOUT:\n{p.stdout[:6000]}\n\n")
+                data = json.loads(p.stdout)
+                res = {}
+                for m in data:
+                    if isinstance(m, dict) and "type" in m:
+                        res[str(m["type"]).lower()] = m.get("result", m.get("data"))
+                if res: return res
+            except Exception as e:
+                lf.write(f"exception: {e!r}\n\n")
+    return {}
+d = fetch()
+g = lambda k, *path, default="": (lambda v: v if v not in (None, "") else default)(
+    __import__("functools").reduce(lambda o, p: o.get(p) if isinstance(o, dict) else None, path, d.get(k)))
+
+user = g("title", "userName", default=os.environ.get("USER", "user"))
+host = g("title", "hostName", default=os.uname().nodename)
+distro = g("os", "prettyName", default="Linux")
+distro = re.sub(r"\s*GNU/Linux\s*", " ", distro); distro = re.sub(r"\s*\(.*?\)", "", distro).strip()
+kernel = g("kernel", "release", default=os.uname().release)
+wm = g("wm", "prettyName", default=g("wm", "processName", default="i3"))
+# fastfetch sees this script as its "shell", so take the real one: the process that started us
+try: shell = open(f"/proc/{os.getppid()}/comm").read().strip()
+except Exception: shell = ""
+if not shell or shell in ("python3", "python", "wired-fetch"):
+    shell = os.path.basename(os.environ.get("SHELL", "sh"))
+pkgs = str(g("packages", "all", default="?"))
+cpu = g("cpu", "cpu", default="?")
+m = re.search(r"(i[3579]-\w+|Ryzen \d+ \w+|Core Ultra \w+ \w+)", cpu); cpu = m.group(1) if m else cpu
+gpus = d.get("gpu") or []
+dgpu = [x for x in gpus if isinstance(x, dict) and str(x.get("type", "")).lower() != "integrated"] or gpus
+gpu = (dgpu[0].get("name") if dgpu and isinstance(dgpu[0], dict) else "?") or "?"
+gpu = re.sub(r"\s*/\s*Max-Q", "", gpu).replace("GeForce ", "")
+GiB = 1024 ** 3
+mu, mt = g("memory", "used", default=0), g("memory", "total", default=1)
+disks = d.get("disk") or [{}]
+disks = [x for x in disks if isinstance(x, dict) and x.get("mountpoint") == "/"] or disks
+du = disks[0].get("bytes", {}).get("used", 0) if isinstance(disks[0], dict) else 0
+dt = disks[0].get("bytes", {}).get("total", 1) if isinstance(disks[0], dict) else 1
+up = int(g("uptime", "uptime", default=0)) // 1000
+uptime = f"{up // 3600}h {up % 3600 // 60:02d}m"
+try:
+    st = os.stat("/"); born = getattr(st, "st_birthtime", 0)
+    if not born:
+        o = subprocess.run(["stat", "-c", "%W", "/"], capture_output=True, text=True).stdout.strip()
+        born = int(o) if o.isdigit() and int(o) > 0 else int(st.st_mtime)
+    age_s = int(time.time() - born); age = f"{age_s // 86400}d {age_s % 86400 // 3600}h"
+except Exception: age = "?"
+
+def bar(frac, w=10, col=A1):
+    n = round(max(0, min(frac, 1)) * w)
+    return col + "━" * n + INA + "━" * (w - n) + R
+
+# ---------- cards ----------
+def card(title, color, rows, inner):
+    top = f"{DIM}╭─{R} {color}{B}{title}{R} {DIM}" + "─" * max(1, inner - vis(title) - 1) + f"╮{R}"
+    body = [f"{DIM}│{R} " + pad(r, inner) + f" {DIM}│{R}" for r in rows]
+    bot = f"{DIM}╰" + "─" * (inner + 2) + f"╯{R}"
+    return [top] + body + [bot]
+
+I = lambda code, col: col + chr(code) + R
+system = [f"{I(0xF033D, A1)}  {FG}{distro}{R}", f"{I(0xF061A, A1)}  {FG}{kernel}{R}",
+          f"{I(0xF056E, A1)}  {FG}{wm}{R}", f"{I(0xF018D, A1)}  {FG}{shell}{R}",
+          f"{I(0xF03D6, A1)}  {FG}{pkgs}{R} {DIM}pkgs{R}"]
+hardware = [f"{I(0xF0EE0, A2)}  {FG}{cpu}{R}", f"{I(0xF08AE, A2)}  {FG}{gpu}{R}",
+            f"{I(0xF035B, A2)}  {bar(mu / mt, col=A2)} {FG}{mu / GiB:.1f}{DIM}/{mt / GiB:.1f} GiB{R}",
+            f"{I(0xF02CA, A2)}  {bar(du / dt, col=A2)} {FG}{du / GiB:.0f}{DIM}/{dt / GiB:.0f} GiB{R}"]
+dots = " ".join(f"\033[3{i}m●" for i in range(1, 7)) + R
+timec = [f"{I(0xF0954, DIM)}  {FG}{uptime}{R}", f"{I(0xF00ED, DIM)}  {FG}{age}{R}", "", dots]
+
+w_sys = max(vis(r) for r in system) + 1
+w_hw = max(vis(r) for r in hardware) + 1
+w_t = max(max(vis(r) for r in timec), 11) + 1
+cards = [card("system", A1, system, w_sys), card("hardware", A2, hardware, w_hw), card("time", DIM, timec, w_t)]
+
+# ---------- header ----------
+logo = [f"{A1}█ █ █ █ {A2}█▀█ █▀▀ █▀▄{R}", f"{A1}▀▄▀▄▀ █ {A2}█▀▄ ██▄ █▄▀{R}"]
+info = [f"{A1}{B}{user}{R}{DIM}@{R}{A2}{host}{R}",
+        f"{DIM}{time.strftime('%a').lower()} · {time.strftime('%d.%m.%y')} · {time.strftime('%I:%M %p').lower()}{R}"]
+M = "  "
+print()
+for l, r in zip(logo, info): print(M + pad(l, 22) + "   " + r)
+print()
+
+cols = shutil.get_terminal_size((100, 30)).columns
+widths = [vis(c[0]) for c in cards]
+if sum(widths) + 2 * (len(cards) - 1) + len(M) <= cols:        # side by side
+    h = max(len(c) for c in cards)
+    for c in cards:                                              # equal height: stretch bodies
+        while len(c) < h: c.insert(-1, f"{DIM}│{R}" + " " * (vis(c[0]) - 2) + f"{DIM}│{R}")
+    for i in range(h): print(M + "  ".join(c[i] for c in cards))
+else:                                                            # narrow terminal: stack
+    for c in cards:
+        for line in c: print(M + line)
+print()
