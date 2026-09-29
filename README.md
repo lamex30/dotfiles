@@ -6,8 +6,8 @@ KDE/Qt apps. Change the wallpaper (Meta+W) and everything re-themes itself.
 
 ![desktop](screenshots/1-desktop.png)
 ![fetch](screenshots/2-fetch.png)
+![tiling](screenshots/4-tiling.png)
 ![cava](screenshots/3-cava.png)
-![power menu](screenshots/4-power-menu.png)
 
 ## Details
 
