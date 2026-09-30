@@ -57,14 +57,23 @@ curl -fsSL "https://github.com/ful1e5/Bibata_Cursor/releases/latest/download/Bib
 echo ">> generating colors from the wallpaper"
 python3 "$HOME/.config/i3/scripts/theme.py" --force >/dev/null || true
 
-if [ "$1" = "--lock-color" ]; then
+if [ "$1" = "--lock-color" ] || [ "$2" = "--lock-color" ]; then
   echo ">> building i3lock-color"
   "$HOME/.config/i3/scripts/install-i3lock-color.sh"
+fi
+
+if [ "$1" = "--sddm" ] || [ "$2" = "--sddm" ]; then
+  echo ">> installing the wired SDDM login theme"
+  sudo mkdir -p /usr/share/sddm/themes/wired /etc/sddm.conf.d
+  sudo chown "$USER": /usr/share/sddm/themes/wired
+  sudo cp "$HOME/.config/i3/sddm/10-wired.conf" /etc/sddm.conf.d/
+  python3 "$HOME/.config/i3/scripts/theme.py" --force >/dev/null || true
 fi
 
 echo
 echo ">> done. Log out and pick i3 on the login screen."
 echo "   Optional: ./install.sh --lock-color  builds i3lock-color for the themed lock screen."
+echo "   Optional: ./install.sh --sddm        installs the wired SDDM login theme."
 echo "   Optional: add  export QT_QPA_PLATFORMTHEME=kde  to ~/.xsessionrc for dark KDE/Qt apps."
 if [ ${#missing[@]} -gt 0 ]; then
   echo

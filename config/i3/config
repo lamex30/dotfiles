@@ -1,4 +1,4 @@
-# ─────────────── base ───────────────
+# ─────────────── база ───────────────
 set $mod Mod4
 font pango:JetBrainsMono Nerd Font 10
 floating_modifier $mod
@@ -24,7 +24,7 @@ for_window [class="bt-popup"] floating enable, border none, move position mouse,
 for_window [class="volume-popup"] floating enable, border none, move position mouse, sticky enable
 for_window [class="wallpicker"] floating enable, border none, move position center
 
-# ─────────────── autostart ───────────────
+# ─────────────── автозапуск ───────────────
 exec_always --no-startup-id setxkbmap -layout us,ru -option '' -option grp:caps_toggle
 exec --no-startup-id picom -b
 exec_always --no-startup-id ~/.config/i3/scripts/restart.sh dunst
@@ -44,11 +44,11 @@ exec_always --no-startup-id ~/.config/i3/scripts/autotiling.sh
 exec_always --no-startup-id ~/.config/i3/scripts/idle.sh
 exec --no-startup-id ~/.config/i3/scripts/dark.sh
 
-# ─────────────── autostart apps ───────────────
-# small delay so the tray exists before tray apps start
+# ─────────────── автозапуск приложений ───────────────
+# небольшая задержка, чтобы трей на панели уже был и они свернулись в него
 exec --no-startup-id ~/.config/i3/scripts/autostart-apps.sh
 
-# ─────────────── apps ───────────────
+# ─────────────── приложения ───────────────
 bindsym $mod+Return exec alacritty
 bindsym Ctrl+Mod1+t exec alacritty
 bindsym $mod+e exec dolphin
@@ -67,7 +67,7 @@ bindsym $mod+v exec --no-startup-id ~/.config/i3/scripts/clip.sh
 bindsym --release $mod+Escape exec --no-startup-id ~/.config/i3/scripts/screen-off.sh
 bindsym --release $mod+l exec --no-startup-id ~/.config/i3/scripts/lock-off.sh
 
-# screenshots -> ~/Pictures/Screenshots/ps_DATE.png + clipboard
+# скриншоты -> ~/Pictures/Screenshots/ps_ДАТА.png + в буфер
 bindsym $mod+Shift+s exec --no-startup-id ~/.config/i3/scripts/screenshot.sh region
 bindsym Print exec --no-startup-id ~/.config/i3/scripts/screenshot.sh region
 bindsym $mod+Ctrl+s exec --no-startup-id ~/.config/i3/scripts/screenshot.sh full
@@ -78,7 +78,7 @@ bindsym $mod+Mod1+s exec --no-startup-id ~/.config/i3/scripts/screenshot.sh dela
 
 bindsym Mod1+F10 exec --no-startup-id obs-cmd replay save
 
-# ─────────────── windows ───────────────
+# ─────────────── окна ───────────────
 bindsym $mod+q kill
 bindsym $mod+Ctrl+Escape exec --no-startup-id xkill
 
@@ -109,13 +109,13 @@ bindsym $mod+Shift+space focus mode_toggle
 bindsym F11 fullscreen toggle
 bindsym $mod+Ctrl+F6 move position center
 
-# layouts
+# раскладки (аналоги Krohnkite)
 bindsym $mod+t layout default
 bindsym $mod+m layout tabbed
 bindsym $mod+r layout toggle split
 bindsym $mod+Shift+r split toggle
 
-# "minimize" / "restore"
+# «свернуть» / «вернуть»
 bindsym $mod+minus move scratchpad
 bindsym $mod+BackSpace scratchpad show
 
@@ -127,7 +127,7 @@ bindsym --whole-window $mod+Ctrl+button4 exec --no-startup-id ~/.config/i3/scrip
 bindsym --whole-window $mod+Ctrl+button5 exec --no-startup-id ~/.config/i3/scripts/zoom.sh out
 bindsym $mod+Ctrl+0 exec --no-startup-id ~/.config/i3/scripts/zoom.sh reset
 
-# ─────────────── workspaces ───────────────
+# ─────────────── рабочие столы ───────────────
 set $ws1 "1"
 set $ws2 "2"
 set $ws3 "3"
@@ -166,7 +166,7 @@ bindsym $mod+Ctrl+Right workspace next
 bindsym $mod+Ctrl+Shift+Left move container to workspace prev; workspace prev
 bindsym $mod+Ctrl+Shift+Right move container to workspace next; workspace next
 
-# ─────────────── media keys ───────────────
+# ─────────────── медиа-клавиши ───────────────
 bindsym XF86AudioRaiseVolume exec --no-startup-id ~/.config/i3/scripts/media.sh vol-up
 bindsym XF86AudioLowerVolume exec --no-startup-id ~/.config/i3/scripts/media.sh vol-down
 bindsym Shift+XF86AudioRaiseVolume exec --no-startup-id ~/.config/i3/scripts/media.sh vol-up-small
@@ -186,7 +186,7 @@ bindsym XF86AudioNext exec --no-startup-id playerctl next
 bindsym XF86AudioPrev exec --no-startup-id playerctl previous
 bindsym XF86AudioStop exec --no-startup-id playerctl stop
 
-# ─────────────── i3 itself ───────────────
+# ─────────────── сам i3 ───────────────
 bindsym $mod+Shift+c reload
 bindsym $mod+Ctrl+r restart
 bindsym $mod+Shift+e exec --no-startup-id i3-nagbar -t warning -m 'Exit i3?' -B 'Yes' 'i3-msg exit'

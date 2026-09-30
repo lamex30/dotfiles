@@ -43,21 +43,21 @@ class OSD:
         self.win.add(box); box.show_all()
         self.timer = None
 
-        # XKB (layout + Caps Lock)
+        # XKB (раскладка + Caps)
         self.x11 = ctypes.cdll.LoadLibrary(ctypes.util.find_library("X11"))
         self.x11.XOpenDisplay.restype = ctypes.c_void_p
         self.dpy = self.x11.XOpenDisplay(None)
         self.last = self.xkb()
         GLib.timeout_add(100, self.poll_xkb)
 
-        # clipboard
+        # буфер обмена
         self.ready = False
         GLib.timeout_add(1500, lambda: setattr(self, "ready", True) or False)
         self.clip = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
         self.clip.connect("owner-change", self.on_clip)
         self.clip_pending = False
 
-        # FIFO for volume/brightness
+        # FIFO для громкости/яркости
         if not os.path.exists(FIFO): os.mkfifo(FIFO)
         fd = os.open(FIFO, os.O_RDWR | os.O_NONBLOCK)
         GLib.io_add_watch(fd, GLib.IO_IN, self.on_fifo)

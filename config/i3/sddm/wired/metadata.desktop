@@ -1,0 +1,10 @@
+[SddmGreeterTheme]
+Name=wired
+Description=Login screen matching the wired i3 rice (colors follow the wallpaper)
+Type=sddm-theme
+Version=1
+MainScript=Main.qml
+ConfigFile=theme.conf
+Theme-Id=wired
+Theme-API=2.0
+QtVersion=6

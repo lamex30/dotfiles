@@ -15,4 +15,5 @@ if python3 ~/.config/i3/scripts/theme.py >/dev/null; then
   ~/.config/polybar/launch.sh
   setsid -f ~/.config/i3/scripts/osd.sh >/dev/null 2>&1
   setsid -f ~/.config/i3/scripts/clock-hover.sh >/dev/null 2>&1
+  # Telegram picks up the rewritten theme file by itself (after it was applied once via tg-theme.sh)
 fi

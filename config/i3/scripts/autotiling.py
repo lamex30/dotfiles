@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-# Hyprland-style dwindle tiling: a new window splits the focused one
-# along its longer side (wide -> side by side, tall -> stacked).
+# Тайлинг как dwindle в Hyprland: новое окно делит фокусное окно
+# по длинной стороне (широкое -> рядом, высокое -> снизу).
 import i3ipc
 
 def on_focus(i3, e):

@@ -34,6 +34,8 @@ KDE/Qt apps. Change the wallpaper (Meta+W) and everything re-themes itself.
 - **Popups** that close when the pointer leaves: audio (output/input device + volume, per-app volume),
   battery + brightness, bluetooth, notification center with Do Not Disturb.
 - **OSD** under the bar for volume, brightness, keyboard layout, Caps Lock and clipboard copies.
+- **SDDM login theme** that looks like the lock screen (ring, session picker, power buttons) and follows the wallpaper too.
+- **Telegram Desktop theme** generated from the wallpaper and applied live.
 - **Power menu** grid, **clipboard history** at the cursor, **magnifier** (Meta+Ctrl+scroll),
   **region screenshot** with dimmed surroundings, **KDE-style resize** (Meta+right drag, 3x3 zones),
   **idle manager** (dim → lock → screen off, paused while media plays).
@@ -42,7 +44,7 @@ KDE/Qt apps. Change the wallpaper (Meta+W) and everything re-themes itself.
 
 ```sh
 git clone https://github.com/lamex30/dotfiles && cd dotfiles
-./install.sh               # add --lock-color to build i3lock-color
+./install.sh               # --lock-color: build i3lock-color, --sddm: login theme
 ```
 
 The installer checks every package with apt before installing and lists the ones it couldn't find,

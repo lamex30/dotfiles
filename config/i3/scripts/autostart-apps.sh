@@ -14,12 +14,11 @@ echo "-- $(date '+%T') before apps:"; pgrep -a -f 'obs|telegram|Throne' | grep -
 systemctl --user --no-pager list-units --all 2>/dev/null | grep -iE 'autostart|portal' 
 sleep 3
 echo "-- $(date '+%T') starting apps"
-# edit this list to your own apps
-flatpak info org.telegram.desktop >/dev/null 2>&1 && flatpak run org.telegram.desktop -startintray &
-[ -x /opt/Throne/Throne ] && /opt/Throne/Throne -tray -appdata &
+flatpak run org.telegram.desktop -startintray &
+/opt/Throne/Throne -tray -appdata &
 sleep 1
 # OBS: without the KDE platform theme Qt uses the classic tray icon that polybar shows
-command -v obs >/dev/null && env -u QT_QPA_PLATFORMTHEME obs --minimize-to-tray --startreplaybuffer &
-[ -x ~/.local/bin/default-volume ] && ~/.local/bin/default-volume &
+env -u QT_QPA_PLATFORMTHEME obs --minimize-to-tray --startreplaybuffer &
+~/.local/bin/default-volume &
 ( sleep 30; echo "-- $(date '+%T') +30s:"; pgrep -a -f 'obs|telegram|Throne|portal' | grep -v pgrep ) &
 wait

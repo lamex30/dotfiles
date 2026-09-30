@@ -1,5 +1,5 @@
 #!/bin/sh
-# Dark theme for everything that follows the system setting (Firefox, Electron, GTK4, Telegram)
+# Тёмная тема для всего, что слушает системную настройку (Firefox, Electron, GTK4, Telegram)
 gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'
 gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark-Wall'
